@@ -17,7 +17,7 @@ ext {
 }
 
 buildscript {
-    ext.kotlin_version = '1.2.0'
+    ext.kotlin_version = '1.2.10'
     ext.kotlin_coroutine_version = '0.19'
     ext.kotlin_coroutine_retrofit_version = '0.8.2'
     repositories {
