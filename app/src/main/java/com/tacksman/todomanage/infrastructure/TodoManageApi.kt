@@ -1,7 +1,7 @@
-package com.tacksman.todomanage.repository
+package com.tacksman.todomanage.infrastructure
 
 import com.tacksman.todomanage.BuildConfig
-import com.tacksman.todomanage.repository.interceptor.LoggingInterceptor
+import com.tacksman.todomanage.infrastructure.interceptor.LoggingInterceptor
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
@@ -18,7 +18,7 @@ class TodoManageApi {
     /**
      * アクセストークンを必要としないリクエストを行うときにコールする.
      */
-    fun <T> retrofit(): Retrofit {
+    fun retrofit(): Retrofit {
 
         return Retrofit.Builder()
                 .baseUrl(BuildConfig.API_URL_BASE)

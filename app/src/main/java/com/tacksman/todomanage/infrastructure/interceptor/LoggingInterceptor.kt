@@ -1,4 +1,4 @@
-package com.tacksman.todomanage.repository.interceptor
+package com.tacksman.todomanage.infrastructure.interceptor
 
 import okhttp3.Headers
 import okhttp3.Interceptor

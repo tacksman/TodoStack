@@ -1,7 +1,13 @@
-package com.tacksman.todomanage.repository
+package com.tacksman.todomanage.infrastructure
 
-/**
- * Created by tacksman on 2017/12/17.
- */
+import com.tacksman.todomanage.entity.Todo
+import kotlinx.coroutines.experimental.async
+import ru.gildor.coroutines.retrofit.await
+
 class TodoManageRepository {
+
+    suspend fun fetchList(): List<Todo> = async {
+        TodoManageDao(TodoManageApi()).fetchTodoList().await()
+    }.await()
+
 }

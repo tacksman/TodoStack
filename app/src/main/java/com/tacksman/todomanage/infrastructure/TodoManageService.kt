@@ -1,7 +1,29 @@
 package com.tacksman.todomanage.infrastructure
 
-/**
- * Created by tacksman on 2017/12/17.
- */
-class TodoManageService {
+import com.tacksman.todomanage.entity.Todo
+import retrofit2.Call
+import retrofit2.http.*
+
+interface TodoManageService {
+
+    @GET("/todos")
+    fun fetchTodoList(): Call<List<Todo>>
+
+    @GET("/todos/{id}")
+    fun fetchTodo(@Query("id") id: String): Call<Todo>
+
+    @POST("/todos")
+    fun addTodo(
+            @Body todo: Todo
+    ): Call<String>
+
+    @PUT("/todos/{id}")
+    fun update(
+            @Query("id") id: String,
+            @Body todo: Todo
+    )
+
+    @DELETE("/todos/{id}")
+    fun delete(id: String): Call<Boolean>
+
 }
