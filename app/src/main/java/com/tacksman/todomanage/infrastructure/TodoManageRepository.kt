@@ -10,4 +10,8 @@ class TodoManageRepository {
         TodoManageDao(TodoManageApi()).fetchTodoList().await()
     }.await()
 
+    suspend fun add(todo: Todo): String = async {
+        TodoManageDao(TodoManageApi()).addTodo(todo).await()
+    }.await()
+
 }
