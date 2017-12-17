@@ -15,7 +15,11 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
+        debug {
+            buildConfigField("String", "API_URL_BASE", "\"http://localhost:8080/\"")
+        }
         release {
+            buildConfigField("String", "API_URL_BASE", "\"http://localhost:8080/\"")
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
@@ -50,4 +54,9 @@ dependencies {
 
     compile 'com.jakewharton.threetenabp:threetenabp:1.0.5'
 
+}
+kotlin {
+    experimental {
+        coroutines "enable"
+    }
 }
