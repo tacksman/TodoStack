@@ -8,7 +8,7 @@ import com.tacksman.todomanage.infrastructure.TodoManageRepository
 
 class TodoListManageModel() : Parcelable {
 
-    val repository = TodoManageRepository()
+    private val repository = TodoManageRepository()
 
     var todoList = emptyList<Todo>()
 
