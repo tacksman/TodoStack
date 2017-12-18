@@ -125,6 +125,7 @@ class TodoManageActivity : AppCompatActivity() {
         class TodoViewHolder(itemView: View?) : RecyclerView.ViewHolder(itemView) {
             fun bind(todo: Todo) {
                 itemView.title.text = todo.title
+                itemView.description.text = todo.description
                 itemView.completed.visibility = if (todo.completed) View.VISIBLE else View.GONE
             }
         }
