@@ -16,11 +16,11 @@ class Todo(
 
     class Builder {
 
-        lateinit var id: String
-        lateinit var title: String
-        lateinit var description: String
+        var id: String = ""
+        var title: String = ""
+        var description: String = ""
         var completed: Boolean = false
-        lateinit var createdAt: String
+        var createdAt: String = ""
 
         fun id(id: String): Builder {
             this.id = id
@@ -43,7 +43,6 @@ class Todo(
         }
 
         fun build(): Todo {
-
             return Todo(id, title, description, completed, createdAt)
         }
     }

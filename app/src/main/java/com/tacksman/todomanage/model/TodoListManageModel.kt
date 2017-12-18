@@ -2,7 +2,6 @@ package com.tacksman.todomanage.model
 
 import android.os.Parcel
 import android.os.Parcelable
-import android.util.Log
 import com.tacksman.todomanage.entity.Todo
 import com.tacksman.todomanage.infrastructure.TodoManageRepository
 
@@ -17,12 +16,11 @@ class TodoListManageModel() : Parcelable {
     }
 
     fun updateTodoList(newTodoList: List<Todo>) {
-
+        todoList = newTodoList
     }
 
     suspend fun fetchTodoList(): List<Todo> {
-        val fetchedTodoList = repository.fetchList()
-        return fetchedTodoList
+        return repository.fetchList()
     }
 
     suspend fun addTodo(todo: Todo): String {
