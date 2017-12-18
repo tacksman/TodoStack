@@ -12,7 +12,10 @@
         android:layout_height="match_parent"
         tools:context="com.tacksman.todomanage.activity.TodoManageActivity">
 
-        <include layout="@layout/content_todo_activity" />
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_todo_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/fab"

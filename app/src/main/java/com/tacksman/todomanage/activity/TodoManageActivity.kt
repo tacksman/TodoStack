@@ -14,7 +14,6 @@ import com.tacksman.todomanage.R
 import com.tacksman.todomanage.entity.Todo
 import com.tacksman.todomanage.model.TodoListManageModel
 import kotlinx.android.synthetic.main.activity_todo.*
-import kotlinx.android.synthetic.main.content_todo_activity.*
 import kotlinx.android.synthetic.main.view_todo_list_item.view.*
 import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.android.UI
@@ -24,6 +23,8 @@ import kotlinx.coroutines.experimental.launch
 class TodoManageActivity : AppCompatActivity() {
 
     private lateinit var model: TodoListManageModel
+
+    private val TAG = TodoManageActivity::class.java.simpleName
 
     private val KEY_MODEL = "${TodoManageActivity::class.java.simpleName}.model"
 
@@ -40,8 +41,8 @@ class TodoManageActivity : AppCompatActivity() {
         }
 
         adapter = TodoListAdapter(this)
+        rv_todo_list.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         rv_todo_list.adapter = adapter
-        rv_todo_list.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, true)
 
         fab.setOnClickListener { view ->
 
@@ -52,57 +53,68 @@ class TodoManageActivity : AppCompatActivity() {
 
     private fun fetchTodoList() {
         launch(UI) {
+            var todoList = model.todoList
             async(coroutineContext + CommonPool) {
                 try {
-                    val todoList = model.fetchTodoList()
-                    adapter.update(todoList)
+                    todoList = model.fetchTodoList()
                 } catch (e: Throwable) {
                     Log.w(this@TodoManageActivity::class.java.simpleName, e)
+                    throw e
                 }
             }.await()
+
+            Log.d(TAG, "fetched: $todoList")
+            adapter.todoList = todoList as MutableList<Todo>
+            adapter.notifyDataSetChanged()
         }
+    }
+
+    /**
+     * addTodo実行後コールしてリストを再描画する
+     */
+    private fun update(newTodoList: List<Todo>) {
+        val todoList = adapter.todoList
+        DiffUtil.calculateDiff(object: DiffUtil.Callback() {
+            override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+                return todoList[oldItemPosition].id == newTodoList[newItemPosition].id
+            }
+
+            override fun getOldListSize(): Int {
+                return todoList.size
+            }
+
+            override fun getNewListSize(): Int {
+                return newTodoList.size
+            }
+
+            override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+                return todoList[oldItemPosition] == newTodoList[newItemPosition]
+            }
+
+            override fun getChangePayload(oldItemPosition: Int, newItemPosition: Int): Any? {
+                val payload = mutableMapOf<String, Pair<Any?, Any?>>()
+                payload["title"] = Pair(todoList[oldItemPosition].title, newTodoList[newItemPosition].title)
+                payload["description"] = Pair(todoList[oldItemPosition].description, newTodoList[newItemPosition].description)
+                payload["completed"] = Pair(todoList[oldItemPosition].completed, newTodoList[newItemPosition].completed)
+                return payload
+            }
+        }).dispatchUpdatesTo(adapter)
+
+        model.updateTodoList(newTodoList)
     }
 
     class TodoListAdapter(context: Context): RecyclerView.Adapter<TodoListAdapter.TodoViewHolder>() {
 
-        val todoList = mutableListOf<Todo>()
+        var todoList = mutableListOf<Todo>()
 
-        val inflater: LayoutInflater = LayoutInflater.from(context)
-
-        fun update(newTodoList: List<Todo>) {
-            DiffUtil.calculateDiff(object: DiffUtil.Callback() {
-                override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-                    return todoList[oldItemPosition].id == newTodoList[newItemPosition].id
-                }
-
-                override fun getOldListSize(): Int {
-                    return todoList.size
-                }
-
-                override fun getNewListSize(): Int {
-                    return newTodoList.size
-                }
-
-                override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-                    return todoList[oldItemPosition] == newTodoList[newItemPosition]
-                }
-
-                override fun getChangePayload(oldItemPosition: Int, newItemPosition: Int): Any? {
-                    val payload = mutableMapOf<String, Pair<Any?, Any?>>()
-                    payload["title"] = Pair(todoList[oldItemPosition].title, newTodoList[newItemPosition].title)
-                    payload["description"] = Pair(todoList[oldItemPosition].description, newTodoList[newItemPosition].description)
-                    payload["completed"] = Pair(todoList[oldItemPosition].completed, newTodoList[newItemPosition].completed)
-                    return payload
-                }
-            }).dispatchUpdatesTo(this)
-        }
+        private val inflater: LayoutInflater = LayoutInflater.from(context)
 
         override fun onBindViewHolder(holder: TodoViewHolder?, position: Int) {
             holder?.bind(todoList[position])
         }
 
         override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): TodoViewHolder {
-            val view = inflater.inflate(R.layout.view_todo_list_item, parent)
+            val view = inflater.inflate(R.layout.view_todo_list_item, parent, false)
             return TodoViewHolder(view)
         }
 
