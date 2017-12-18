@@ -1,17 +1,16 @@
 package com.tacksman.todomanage.activity
 
 import android.content.Context
-import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.util.DiffUtil
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.tacksman.todomanage.R
-import com.tacksman.todomanage.databinding.ActivityTodoBinding
 import com.tacksman.todomanage.entity.Todo
 import com.tacksman.todomanage.model.TodoListManageModel
 import kotlinx.android.synthetic.main.activity_todo.*
@@ -51,12 +50,16 @@ class TodoManageActivity : AppCompatActivity() {
         fetchTodoList()
     }
 
-    fun fetchTodoList() {
+    private fun fetchTodoList() {
         launch(UI) {
             async(coroutineContext + CommonPool) {
-                val todoList = model.fetchTodoList()
-                adapter.update(todoList)
-            }
+                try {
+                    val todoList = model.fetchTodoList()
+                    adapter.update(todoList)
+                } catch (e: Throwable) {
+                    Log.w(this@TodoManageActivity::class.java.simpleName, e)
+                }
+            }.await()
         }
     }
 
