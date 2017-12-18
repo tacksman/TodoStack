@@ -24,6 +24,9 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    dataBinding {
+        enabled true
+    }
 }
 
 dependencies {
@@ -45,6 +48,7 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
 
     compile 'org.jetbrains.kotlinx:kotlinx-coroutines-core:0.20'
+    compile "org.jetbrains.kotlinx:kotlinx-coroutines-android:0.20"
     compile 'ru.gildor.coroutines:kotlin-coroutines-retrofit:0.8.2'
 
     // retrofit2
