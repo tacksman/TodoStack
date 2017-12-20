@@ -2,6 +2,7 @@ package com.tacksman.todomanage.activity
 
 import android.app.Dialog
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
 import android.support.v7.app.AlertDialog
@@ -134,7 +135,7 @@ class TodoManageActivity : AppCompatActivity(), PositiveButtonClickListener {
         model.updateTodoList(newTodoList)
     }
 
-    class TodoListAdapter(context: Context) : RecyclerView.Adapter<TodoListAdapter.TodoViewHolder>() {
+    class TodoListAdapter(private val context: Context) : RecyclerView.Adapter<TodoListAdapter.TodoViewHolder>() {
 
         var todoList = mutableListOf<Todo>()
 
@@ -148,7 +149,7 @@ class TodoManageActivity : AppCompatActivity(), PositiveButtonClickListener {
         }
 
         override fun onBindViewHolder(holder: TodoViewHolder?, position: Int) {
-            holder?.bind(todoList[position])
+            holder?.bind(todoList[position], context)
         }
 
         override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): TodoViewHolder {
@@ -161,19 +162,17 @@ class TodoManageActivity : AppCompatActivity(), PositiveButtonClickListener {
         }
 
         class TodoViewHolder(itemView: View?) : RecyclerView.ViewHolder(itemView) {
-            fun bind(todo: Todo) {
+            fun bind(todo: Todo, context: Context) {
                 itemView.title.text = todo.title
-                itemView.description.text = todo.description
                 itemView.completed.visibility = if (todo.completed) View.VISIBLE else View.GONE
+                itemView.setOnClickListener {
+                    context.startActivity(TodoDetailActivity().createIntent(context, todo))
+                }
             }
         }
     }
 
     class AddNewTodoInfoInputDialogFragment : DialogFragment() {
-
-        companion object {
-            val ADD_TODO = 102
-        }
 
         var title: String = ""
         var description: String = ""
