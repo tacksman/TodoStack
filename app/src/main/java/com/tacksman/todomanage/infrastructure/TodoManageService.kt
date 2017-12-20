@@ -19,9 +19,9 @@ interface TodoManageService {
 
     @PUT("/todos/{id}")
     fun update(
-            @Query("id") id: String,
+            @Path("id") id: String,
             @Body todo: Todo
-    )
+    ): Call<String>
 
     @DELETE("/todos/{id}")
     fun delete(id: String): Call<Boolean>

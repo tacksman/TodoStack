@@ -76,6 +76,11 @@ class TodoManageActivity : AppCompatActivity(), PositiveButtonClickListener {
         fetchTodoList()
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        fetchTodoList()
+    }
+
     private fun fetchTodoList() {
         launch(UI) {
             var todoList = model.todoList
@@ -135,11 +140,11 @@ class TodoManageActivity : AppCompatActivity(), PositiveButtonClickListener {
         model.updateTodoList(newTodoList)
     }
 
-    class TodoListAdapter(private val context: Context) : RecyclerView.Adapter<TodoListAdapter.TodoViewHolder>() {
+    class TodoListAdapter(private val activity: TodoManageActivity) : RecyclerView.Adapter<TodoListAdapter.TodoViewHolder>() {
 
         var todoList = mutableListOf<Todo>()
 
-        private val inflater: LayoutInflater = LayoutInflater.from(context)
+        private val inflater: LayoutInflater = LayoutInflater.from(activity)
 
         fun update(newTodoList: List<Todo>) {
             val diffResult = DiffUtil.calculateDiff(DiffCallback(todoList.toList(), newTodoList), true)
@@ -149,7 +154,7 @@ class TodoManageActivity : AppCompatActivity(), PositiveButtonClickListener {
         }
 
         override fun onBindViewHolder(holder: TodoViewHolder?, position: Int) {
-            holder?.bind(todoList[position], context)
+            holder?.bind(todoList[position], activity)
         }
 
         override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): TodoViewHolder {
@@ -162,11 +167,11 @@ class TodoManageActivity : AppCompatActivity(), PositiveButtonClickListener {
         }
 
         class TodoViewHolder(itemView: View?) : RecyclerView.ViewHolder(itemView) {
-            fun bind(todo: Todo, context: Context) {
+            fun bind(todo: Todo, activity: TodoManageActivity) {
                 itemView.title.text = todo.title
                 itemView.completed.visibility = if (todo.completed) View.VISIBLE else View.GONE
                 itemView.setOnClickListener {
-                    context.startActivity(TodoDetailActivity().createIntent(context, todo))
+                    activity.startActivityForResult(TodoDetailActivity().createIntent(activity, todo), 100)
                 }
             }
         }

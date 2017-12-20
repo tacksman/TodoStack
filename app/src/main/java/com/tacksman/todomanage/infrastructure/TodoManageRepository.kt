@@ -14,4 +14,8 @@ class TodoManageRepository {
         TodoManageDao(TodoManageApi()).addTodo(todo).await()
     }.await()
 
+    suspend fun edit(todo: Todo): String = async {
+        TodoManageDao(TodoManageApi()).update(todo.id, todo).await()
+    }.await()
+
 }

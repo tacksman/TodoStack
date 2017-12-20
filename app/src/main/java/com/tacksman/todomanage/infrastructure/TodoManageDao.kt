@@ -17,8 +17,8 @@ class TodoManageDao(val api: TodoManageApi): TodoManageService {
         return api.retrofit().create(TodoManageService::class.java).addTodo(todo)
     }
 
-    override fun update(id: String, todo: Todo) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun update(id: String, todo: Todo): Call<String> {
+        return api.retrofit().create(TodoManageService::class.java).update(id, todo)
     }
 
     override fun delete(id: String): Call<Boolean> {

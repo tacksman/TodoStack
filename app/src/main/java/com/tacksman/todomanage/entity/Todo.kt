@@ -5,8 +5,8 @@ import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 
 class Todo(
-        @SerializedName("id") val id: String?,
-        @SerializedName("title") var title: String?,
+        @SerializedName("id") val id: String,
+        @SerializedName("title") var title: String,
         @SerializedName("description") var description: String?,
         @SerializedName("completed") var completed: Boolean,
         @SerializedName("created_at") val createdAt: String?
@@ -14,13 +14,22 @@ class Todo(
 
 
 
-    class Builder {
+    class Builder() {
 
         var id: String = ""
         var title: String = ""
-        var description: String = ""
+        var description: String? = ""
         var completed: Boolean = false
-        var createdAt: String = ""
+        var createdAt: String? = ""
+
+        fun init(todo: Todo): Builder {
+            id = todo.id
+            title = todo.id
+            description = todo.description
+            completed = todo.completed
+            createdAt = todo.createdAt
+            return this
+        }
 
         fun id(id: String): Builder {
             this.id = id
@@ -32,12 +41,17 @@ class Todo(
             return this
         }
 
-        fun description(description: String): Builder {
+        fun description(description: String?): Builder {
             this.description = description
             return this
         }
 
-        fun createdAt(createdAt: String): Builder {
+        fun completed(completed: Boolean): Builder {
+            this.completed = completed
+            return this
+        }
+
+        fun createdAt(createdAt: String?): Builder {
             this.createdAt = createdAt
             return this
         }
@@ -72,7 +86,7 @@ class Todo(
 
     override fun hashCode(): Int {
         var result = id?.hashCode() ?: 0
-        result = 31 * result + (title?.hashCode() ?: 0)
+        result = 31 * result + (title.hashCode() ?: 0)
         result = 31 * result + (description?.hashCode() ?: 0)
         result = 31 * result + completed.hashCode()
         result = 31 * result + (createdAt?.hashCode() ?: 0)

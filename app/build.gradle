@@ -4,6 +4,8 @@ apply plugin: 'kotlin-android'
 
 apply plugin: 'kotlin-android-extensions'
 
+apply plugin: 'kotlin-kapt'
+
 android {
     compileSdkVersion 26
     defaultConfig {
@@ -58,9 +60,15 @@ dependencies {
 
     compile 'com.jakewharton.threetenabp:threetenabp:1.0.5'
 
+    kapt 'com.android.databinding:compiler:3.0.1'
+
 }
 kotlin {
     experimental {
         coroutines "enable"
     }
+}
+
+kapt {
+    generateStubs = true
 }
